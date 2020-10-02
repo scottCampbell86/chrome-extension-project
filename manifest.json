@@ -4,26 +4,34 @@
   "name": "Youtube Time Tracker",
   "description": "This extension will track time spent on Youtube",
   "version": "1.0",
+
   "icons": {
     "128": "clock-6-128-1.png"
   },
 
-  "page_action": {
-    "default_icon": "clock-6-128-1.png",
-    "default_popup": "display.html"
+  "permissions": [
+    "https://youtube.com/",
+    "http://youtube.com/",
+    "storage"
+  ],
+
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
   },
 
   "content_scripts": [
     {
-      "matches": ["https://youtube.com/"],
-      "css": ["background.css"],
-      "js": ["background.js"]
+      "matches": ["https://*.youtube.com/*", "http://*.youtube.com/*"],
+      "js": ["content.js"]
     }
   ],
 
-  "permissions": [
-    "https://youtube.com/", "storage"
-  ]
+  "browser_action": {
+    "default_icon": "clock-6-128-1.png",
+    "default_popup": "popup.html"
+  }
+
 }
 
 
