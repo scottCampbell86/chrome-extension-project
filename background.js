@@ -1,37 +1,47 @@
-// chrome.webNavigation.onCompleted.addListener(function() {
-//   alert("Welcome to YouTube!");
-//   }, {url: [{urlMatches: 'https://www.youtube.com/*'}]}
-// );
+// chrome.runtime.onInstalled.addListener(function() {
+//   chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
+//     chrome.declarativeContent.onPageChanged.addRules([{
+//       conditions: [new chrome.declarativeContent.PageStateMatcher({
+//         pageUrl: {hostEquals: 'https://www.youtube.com/*'},
+//       })
+//       ],
+//           actions: [new chrome.declarativeContent.ShowPageAction()]
+//     }]);
+//   });
+// });
 
 const time = document.querySelector('#time');
-let timeObj = { s: 0, m: 0, h: 0 };
-
-setInterval(getTime, 1000);
 
 function getTime() {
-  //Retrieve time from google storage
-  chrome.storage.sync.get({'storedTime': null}, function(data) {
-    data.storedTime === null ? timeObj : timeObj = data.storedTime;
-  });
+  // Retrieve time from google storage, set timeObj to our stored data if there is data
+  chrome.storage.local.get(['storedTime'], (data) => {
+    // This add time to our object
+    timeObj = JSON.parse(data.storedTime);
+    console.log(timeObj)
 
-  //This add time to our object
-  timeObj['s'] += 1;
-  if (timeObj['s']  >= 60) {
-    timeObj['m'] += 1;
-    timeObj['s'] = 0;
-  }
-  if (timeObj['m'] >= 60) {
-    timeObj['h'] += 1;
-    timeObj['m'] = 0;
-  }
+    timeObj.s += 1;
+    if (timeObj.s >= 60) {
+      timeObj.m += 1;
+      timeObj.s = 0;
+    }
+    if (timeObj.m >= 60) {
+      timeObj.h += 1;
+      timeObj.m = 0;
+    }
 
-  //Updates our HTML with new time
-  time.innerHTML = timeObj['h'] + ' hr ' + timeObj['m'] + ' min ' + timeObj['s'] + ' sec';
-  console.log(time);
-
-  //Stores time in our google storage
-  chrome.storage.sync.set({'storedTime': timeObj}, function() {
     console.log(timeObj);
+    console.log(data.storedTime);
+
+    // Updates our HTML with new time
+    time.innerHTML = `${timeObj.h} hr ${timeObj.m} min ${timeObj.s} sec`;
+    console.log(time);
+
+    chrome.storage.local.set({ 'storedTime': JSON.stringify(timeObj)}, function () {
+      console.log(data.storedTime);
+    });
   });
-  
-};
+}
+
+// function runTime() {
+  setInterval(getTime, 1000);
+// }

@@ -12,7 +12,8 @@
   "permissions": [
     "*://*.youtube.com/*",
     "webNavigation",
-    "storage"
+    "storage",
+    "declarativeContent"
   ],
 
   "background": {
