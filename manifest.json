@@ -2,7 +2,7 @@
 
   "manifest_version": 2,
   "name": "Youtube Time Tracker",
-  "description": "This extension will track time spent on Youtube",
+  "description": "This extension will track the amount of time youtube.com is open on your browser.",
   "version": "1.0",
 
   "icons": {
@@ -10,8 +10,8 @@
   },
 
   "permissions": [
-    "https://youtube.com/",
-    "http://youtube.com/",
+    "*://*.youtube.com/*",
+    "webNavigation",
     "storage"
   ],
 
@@ -22,7 +22,7 @@
 
   "content_scripts": [
     {
-      "matches": ["https://*.youtube.com/*", "http://*.youtube.com/*"],
+      "matches": ["*://*.youtube.com/*"],
       "js": ["content.js"]
     }
   ],
