@@ -1,15 +1,37 @@
+// chrome.webNavigation.onCompleted.addListener(function() {
+//   alert("Welcome to YouTube!");
+//   }, {url: [{urlMatches: 'https://www.youtube.com/*'}]}
+// );
 
+const time = document.querySelector('#time');
+let timeObj = { s: 0, m: 0, h: 0 };
 
-chrome.runtime.onInstalled.addListener(() => {  
+setInterval(getTime, 1000);
 
-  console.log('yooo');
+function getTime() {
+  //Retrieve time from google storage
+  chrome.storage.sync.get({'storedTime': null}, function(data) {
+    data.storedTime === null ? timeObj : timeObj = data.storedTime;
+  });
 
-  // chrome.storage.local.set(JSON.stringify({'1': 2}), () => {
-  //   console.log('Value is set to ' + value);
-  // })
-  // chrome.storage.local.get(JSON.parse(['1']), () => {
-  //   console.log('Value currently is ' + result.key)
-  // })
+  //This add time to our object
+  timeObj['s'] += 1;
+  if (timeObj['s']  >= 60) {
+    timeObj['m'] += 1;
+    timeObj['s'] = 0;
+  }
+  if (timeObj['m'] >= 60) {
+    timeObj['h'] += 1;
+    timeObj['m'] = 0;
+  }
 
-});
+  //Updates our HTML with new time
+  time.innerHTML = timeObj['h'] + ' hr ' + timeObj['m'] + ' min ' + timeObj['s'] + ' sec';
+  console.log(time);
 
+  //Stores time in our google storage
+  chrome.storage.sync.set({'storedTime': timeObj}, function() {
+    console.log(timeObj);
+  });
+  
+};
